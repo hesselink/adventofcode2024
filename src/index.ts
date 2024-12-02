@@ -2,18 +2,21 @@ import * as day1 from "./day1";
 import * as day2 from "./day2";
 import Process, { exit } from "process";
 
-const day = +Process.argv[2];
+const dayArg = +Process.argv[2];
+type Day = typeof day1;
+const days = [day1, day2];
 
-if (!day) {
-  console.log("Please specify the day as an argument");
+if (Number.isNaN(dayArg)) {
+  console.log("Please specify the day as a numeric argument");
+  exit(1);
+}
+if (dayArg < 1 || dayArg > days.length) {
+  console.log("Days argument out of bounds");
   exit(1);
 }
 
-switch (day) {
-  case 1:
-    day1.part1().then(console.log).then(day1.part2).then(console.log);
-    break;
-  case 2:
-    day2.part1().then(console.log).then(day2.part2).then(console.log);
-    break;
+run(days[dayArg - 1]);
+
+function run(day: Day) {
+  day.part1().then(console.log).then(day.part2).then(console.log);
 }
