@@ -24,3 +24,25 @@ function isSafe(report: number[]): boolean {
   );
   return allIncreasingOrDecreasing && allBetweenOneAndThree;
 }
+
+export async function part2() {
+  const ns = await readInput();
+  return ns.filter(isSafe2).length;
+}
+
+function isSafe2(report: number[]): boolean {
+  const dampened = [report];
+  for (let i = 0; i < report.length; i++) {
+    dampened.push(deleteAt(i, report));
+  }
+  return dampened.some(isSafe);
+}
+
+function deleteAt<T>(n: number, xs: T[]): T[] {
+  if (n < 0 || n >= xs.length) {
+    return xs;
+  }
+  const res = xs.slice();
+  res.splice(n, 1);
+  return res;
+}

@@ -14,6 +14,6 @@ switch (day) {
     day1.part1().then(console.log).then(day1.part2).then(console.log);
     break;
   case 2:
-    day2.part1().then(console.log);
+    day2.part1().then(console.log).then(day2.part2).then(console.log);
     break;
 }
