@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { tail, zipWith } from "./array";
+import { deleteAt, tail, zipWith } from "./array";
 
 async function readInput(): Promise<number[][]> {
   const f = await readFile("input/2");
@@ -36,13 +36,4 @@ function isSafe2(report: number[]): boolean {
     dampened.push(deleteAt(i, report));
   }
   return dampened.some(isSafe);
-}
-
-function deleteAt<T>(n: number, xs: T[]): T[] {
-  if (n < 0 || n >= xs.length) {
-    return xs;
-  }
-  const res = xs.slice();
-  res.splice(n, 1);
-  return res;
 }

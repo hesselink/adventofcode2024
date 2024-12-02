@@ -38,3 +38,11 @@ export function tail<T>(xs: T[]): T[] | undefined {
   copy.shift();
   return copy;
 }
+export function deleteAt<T>(n: number, xs: T[]): T[] {
+  if (n < 0 || n >= xs.length) {
+    return xs;
+  }
+  const res = xs.slice();
+  res.splice(n, 1);
+  return res;
+}
