@@ -29,3 +29,12 @@ export function sort<T>(
 export function sum(xs: number[]): number {
   return xs.reduce((x, y) => x + y, 0);
 }
+
+export function tail<T>(xs: T[]): T[] | undefined {
+  if (xs.length === 0) {
+    return undefined;
+  }
+  const copy = xs.slice();
+  copy.shift();
+  return copy;
+}
