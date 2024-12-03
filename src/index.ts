@@ -1,10 +1,14 @@
 import * as day1 from "./day1";
 import * as day2 from "./day2";
+import * as day3 from "./day3";
 import Process, { exit } from "process";
 
 const dayArg = +Process.argv[2];
-type Day = typeof day1;
-const days = [day1, day2];
+type Day = {
+  part1: () => Promise<any>,
+  part2?: () => Promise<any>,
+}
+const days = [day1, day2, day3];
 
 if (Number.isNaN(dayArg)) {
   console.log("Please specify the day as a numeric argument");
