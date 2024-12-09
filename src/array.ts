@@ -46,3 +46,9 @@ export function deleteAt<T>(n: number, xs: T[]): T[] {
   res.splice(n, 1);
   return res;
 }
+
+export function reverse<T>(xs: T[]): T[] {
+  const copy = xs.slice()
+  copy.reverse()
+  return copy
+}
