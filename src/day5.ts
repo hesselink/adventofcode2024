@@ -23,6 +23,11 @@ export async function part1() {
 }
 
 export async function part2() {
+  const [orderings, updates] = await readInput()
+  const incorrectUpdates = updates.filter(u => !correctlyOrdered(orderings, u))
+  const reordered = incorrectUpdates.map(u => fixOrder(orderings, u))
+  const middles = reordered.map(getMiddle)
+  return sum(middles)
 }
 
 function correctlyOrdered(orderings: Orderings, update: Update): boolean {
@@ -42,4 +47,22 @@ function correctlyOrdered(orderings: Orderings, update: Update): boolean {
 function getMiddle<T>(xs: T[]): T {
   const ix = Math.floor(xs.length / 2);
   return xs[ix]
+}
+
+function fixOrder(orderings: Orderings, update: Update): Update {
+  let newUpdate: Update = []
+  for (let i = 0; i < update.length; i++) {
+    const current = update[i];
+    const disallowed = orderings.get(current) || []
+    for (let j = 0; j < newUpdate.length; j++) {
+      if (disallowed.includes(newUpdate[j])) {
+        newUpdate.splice(j, 0, current)
+        break;
+      }
+    }
+    if (newUpdate.length === i) {
+      newUpdate.push(current)
+    }
+  }
+  return newUpdate
 }
