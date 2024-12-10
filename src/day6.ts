@@ -1,6 +1,7 @@
 import { readFile } from "fs/promises";
-import { Grid, Point, Direction, move, getAt, comparePoint, eqPoint } from "./grid";
-import { unique } from "./array"
+import { Grid, Point, Direction, move, getAt, setAt, comparePoint, eqPoint } from "./grid";
+import { sort, unique, reverse } from "./array"
+import { comparing, combineOrdering } from "./ordering"
 
 const tiles = [".", "#"] as const
 export type Char = typeof tiles[number]
@@ -19,26 +20,63 @@ async function readInput(): Promise<[Grid<Char>, Guard]> {
 }
 
 export async function part1() {
-  const [grid, guard_] = await readInput()
-  let guard = guard_
-  const positions = []
-  while (isInBounds(grid, guard.position)) {
-    positions.push(guard.position)
-    guard = step(grid, guard)
-  }
+  const [grid, guard] = await readInput()
+  const path = guardPath(grid, guard)
+  const positions = path.map(g => g.position)
   positions.sort(comparePoint)
   const uniques = unique(positions, eqPoint)
   return uniques.length
 }
 
 export async function part2() {
+  const [grid, guard] = await readInput()
+  const path = guardPath(grid, guard)
+  let blockedPoss = []
+  for (let i = 0; i < path.length; i++) {
+    const guardH = path[i]
+    const posToBlock = move(guardH.position, guardH.direction)
+    if (!isInBounds(grid, posToBlock)) {
+      continue;
+    }
+    const blockedGrid = setAt(posToBlock, "#", grid)
+    if (isLoop(blockedGrid, guard)) {
+      blockedPoss.push(posToBlock)
+    }
+  }
+  const uniquePoss = unique(sort(blockedPoss, comparePoint), eqPoint)
+  return uniquePoss.length
+}
+
+function isLoop(grid: Grid<Char>, guard: Guard): boolean {
+  const guardHistory = new Set()
+  function str(g: Guard): string {
+    return g.position.x + "," + g.position.y + ":" + g.direction
+  }
+  while (isInBounds(grid, guard.position)) {
+    const guardStr = str(guard)
+    if (guardHistory.has(guardStr)) {
+      return true
+    }
+    guardHistory.add(guardStr)
+    guard = step(grid, guard)
+  }
+  return false
+}
+
+function guardPath(grid: Grid<Char>, guard: Guard): Guard[] {
+  const guardPath = []
+  while (isInBounds(grid, guard.position)) {
+    guardPath.push(guard)
+    guard = step(grid, guard)
+  }
+  return guardPath
 }
 
 function parseChar(str: string): Char {
   switch (str) {
     case ".": return str;
     case "#": return str;
-    case "^": return "#";
+    case "^": return ".";
     default: throw new Error("Unrecognized character: " + str);
   }
 }
