@@ -52,3 +52,19 @@ export function reverse<T>(xs: T[]): T[] {
   copy.reverse()
   return copy
 }
+
+export function unique<T>(xs: T[], eq?: (t1: T, t2: T) => boolean): T[] {
+  if (eq === undefined) {
+    eq = (x, y) => x === y;
+  }
+  let prev = undefined;
+  let result = [];
+  for (let x of xs) {
+    if (prev && eq(x, prev)) {
+      continue;
+    }
+    result.push(x);
+    prev = x;
+  }
+  return result
+}

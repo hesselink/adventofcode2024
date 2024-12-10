@@ -25,3 +25,11 @@ export function getAt<T>(p: Point, grid: Grid<T>): T | undefined {
   return grid[p.y]?.[p.x];
 }
 
+export function comparePoint(p1: Point, p2: Point): number {
+  const compareX = p1.x - p2.x;
+  return compareX === 0 ? p1.y - p2.y : compareX
+}
+
+export function eqPoint(p1: Point, p2: Point): boolean {
+  return p1.x === p2.x && p1.y === p2.y
+}
